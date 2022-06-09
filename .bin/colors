@@ -1,0 +1,6 @@
+#!/bin/env bash
+# Description: Metadata for dmenu stuff
+
+bg="#282c34"
+altbg="#5C6370"
+fg="#a5a2a2"

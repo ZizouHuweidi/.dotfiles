@@ -1,0 +1,35 @@
+#!/bin/env bash
+
+source colors
+
+# default editor
+DEF_EDITOR="nvim"
+
+FONT="Source Code Pro Medium:size=12"
+
+# list of configs
+if [[ "$DESKTOP_SESSION" == "Qtile" ]]; then
+  CONFIG="$HOME/.config/alacritty/alacritty.yml"
+  declare -a options=( 
+  "Autostart - $HOME/.config/qtile/bin/autostart.sh"
+  "Qtile - $HOME/.config/qtile/config.py"
+  )
+elif [[ "$DESKTOP_SESSION" == "i3" ]]; then
+  CONFIG="$HOME/.config/alacritty/alacritty.yml"
+  declare -a options=(
+  "Autostart - $HOME/.config/i3/bin/autostart.sh"
+  "i3wm - $HOME/.config/i3/config"
+  )
+fi
+
+# creates the menu
+choice=$(printf '%s\n' "${options[@]}" | sort -u | dmenu -c -i -l 10 -nb "$bg" -nf "$fg" -sb "$altbg" -sf "$fg" -fn "$FONT" -p 'Edit Config:')
+
+# opens the selected config file with vim
+# exits otherwise
+if [ "$choice" ]; then
+    cfg=$(printf '%s\n' "${choice}" | awk '{print $NF}')
+    alacritty --config-file "$CONFIG" -e $DEF_EDITOR "$cfg"
+else
+    echo "Exiting..."; exit 1
+fi
